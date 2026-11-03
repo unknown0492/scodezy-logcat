@@ -1,0 +1,93 @@
+<!-- public/index.html - scodezy-logcat page, http://127.0.0.1:3737 -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>scodezy-logcat</title>
+    <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+    <header class="bar">
+        <div class="brand">scodezy-logcat <span id="version" class="muted"></span></div>
+        <div id="status" class="pill pill-idle" title="">No device</div>
+    </header>
+
+    <section class="controls">
+        <!-- Device -->
+        <div class="group">
+            <label for="ip_input">Device IP</label>
+            <div class="row">
+                <input type="text" id="ip_input" placeholder="192.168.1.25" autocomplete="off" />
+                <button id="ip_add" type="button">Add</button>
+            </div>
+            <div class="row">
+                <select id="ip_select"><option value="">Select a device</option></select>
+                <button id="ip_remove" type="button" class="icon" title="Remove the selected IP from the list">&#10005;</button>
+            </div>
+        </div>
+
+        <!-- Package -->
+        <div class="group">
+            <label for="pkg_input">Package</label>
+            <div class="row">
+                <input type="text" id="pkg_input" placeholder="com.excel.estvlauncher.gen3" autocomplete="off" />
+                <button id="pkg_add" type="button">Add</button>
+            </div>
+            <div class="row">
+                <select id="pkg_select"><option value="">No package</option></select>
+                <button id="pkg_remove" type="button" class="icon" title="Remove the selected package from the list">&#10005;</button>
+                <label class="check" title="Show only the lines of the selected package"><input type="checkbox" id="pkg_only" /> Only this package</label>
+            </div>
+        </div>
+
+        <!-- Filters -->
+        <div class="group">
+            <label for="search_input">Search live logs</label>
+            <div class="row">
+                <input type="text" id="search_input" placeholder="Text to find" autocomplete="off" />
+                <button id="search_btn" type="button">Search</button>
+                <button id="search_clear" type="button" class="icon" title="Clear the search">&#10005;</button>
+            </div>
+            <div class="row">
+                <select id="level_select" title="Lowest log level shown">
+                    <option value="">All levels</option>
+                    <option value="D">Debug and up</option>
+                    <option value="I">Info and up</option>
+                    <option value="W">Warning and up</option>
+                    <option value="E">Error and up</option>
+                    <option value="F">Fatal only</option>
+                </select>
+                <button id="save_btn" type="button" class="primary">Save</button>
+                <button id="clear_btn" type="button" title="Clear the screen (Save still has every line)">Clear screen</button>
+            </div>
+        </div>
+    </section>
+
+    <div class="infobar">
+        <span id="counts" class="muted">0 lines</span>
+        <span id="pids" class="muted"></span>
+        <button id="jump_btn" type="button" class="hidden">&#8595; Jump to latest</button>
+    </div>
+
+    <main id="log" class="log"></main>
+
+    <!-- Save: which lines -->
+    <div id="save_dialog" class="dialog hidden">
+        <div class="dialog-box">
+            <h3>Save logs</h3>
+            <p>Save only the lines the filters show now, or every line of this device since it was opened?</p>
+            <div class="row end">
+                <button id="save_filtered" type="button" class="primary">Filtered results</button>
+                <button id="save_all" type="button">All logs</button>
+                <button id="save_cancel" type="button">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast" class="toast hidden"></div>
+
+    <script src="vendor/jquery-3.7.1.min.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,16 @@
+{
+  "name": "scodezy-logcat",
+  "version": "1.0.0",
+  "description": "Live adb logcat of Android TVs in the browser (http://127.0.0.1:3737), on its own adb server so other tools cannot disconnect it",
+  "main": "server.js",
+  "private": true,
+  "scripts": {
+    "start": "node server.js"
+  },
+  "author": "Silent Coders",
+  "license": "UNLICENSED",
+  "dependencies": {
+    "express": "^4.18.2",
+    "ws": "^8.14.2"
+  }
+}
