@@ -1,86 +1,117 @@
-<!-- public/index.html - scodezy-logcat page, http://127.0.0.1:3737 -->
+<!-- public/index.html - scodezy-logcat page, http://127.0.0.1:3737 (one-toolbar layout, light / dark, 1.0.1) -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>scodezy-logcat</title>
+    <script>
+        // Theme before the page paints (no flash): saved choice, else the Windows / browser theme
+        ( function(){
+            var theme = null;   // 'light' | 'dark'
+            try{ theme = localStorage.getItem( 'scodezy-logcat-theme' ); } catch( e ){}
+            if( theme !== 'light' && theme !== 'dark' ){
+                theme = window.matchMedia && window.matchMedia( '(prefers-color-scheme: light)' ).matches ? 'light' : 'dark';
+            }
+            document.documentElement.setAttribute( 'data-theme', theme );
+        } )();
+    </script>
     <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-    <header class="bar">
-        <div class="brand">scodezy-logcat <span id="version" class="muted"></span></div>
-        <div id="status" class="pill pill-idle" title="">No device</div>
+    <header class="topbar">
+        <div class="brand">
+            <span class="logo">&#9679;</span>
+            <span class="brand-name">scodezy-logcat</span>
+            <span id="version" class="version"></span>
+        </div>
+        <div class="top-right">
+            <div id="status" class="status status-idle" title="">
+                <span class="dot"></span><span id="status_text">No device</span>
+            </div>
+            <button id="theme_btn" type="button" class="theme-btn" title="Switch light / dark">
+                <span class="when-dark">&#9790;</span><span class="when-light">&#9728;</span>
+            </button>
+        </div>
     </header>
 
-    <section class="controls">
-        <!-- Device -->
-        <div class="group">
-            <label for="ip_input">Device IP</label>
-            <div class="row">
-                <input type="text" id="ip_input" placeholder="192.168.1.25" autocomplete="off" />
-                <button id="ip_add" type="button">Add</button>
-            </div>
-            <div class="row">
-                <select id="ip_select"><option value="">Select a device</option></select>
-                <button id="ip_remove" type="button" class="icon" title="Remove the selected IP from the list">&#10005;</button>
+    <section class="toolbar">
+        <!-- Device: choose, or "+ Add new..." turns the field into an input -->
+        <div class="field" id="ip_field">
+            <span class="field-icon" title="Device">&#128250;</span>
+            <select id="ip_select"></select>
+            <div class="adder hidden">
+                <input type="text" id="ip_input" placeholder="TV IP, e.g. 192.168.1.25" autocomplete="off" />
+                <button type="button" class="mini ok" data-add="ips" title="Add (Enter)">&#10003;</button>
+                <button type="button" class="mini" data-cancel="ips" title="Cancel (Esc)">&#10005;</button>
             </div>
         </div>
 
         <!-- Package -->
-        <div class="group">
-            <label for="pkg_input">Package</label>
-            <div class="row">
-                <input type="text" id="pkg_input" placeholder="com.excel.estvlauncher.gen3" autocomplete="off" />
-                <button id="pkg_add" type="button">Add</button>
-            </div>
-            <div class="row">
-                <select id="pkg_select"><option value="">No package</option></select>
-                <button id="pkg_remove" type="button" class="icon" title="Remove the selected package from the list">&#10005;</button>
-                <label class="check" title="Show only the lines of the selected package"><input type="checkbox" id="pkg_only" /> Only this package</label>
+        <div class="field" id="pkg_field">
+            <span class="field-icon" title="Package">&#128230;</span>
+            <select id="pkg_select"></select>
+            <div class="adder hidden">
+                <input type="text" id="pkg_input" placeholder="Package, e.g. com.excel.estvlauncher.gen3" autocomplete="off" />
+                <button type="button" class="mini ok" data-add="packages" title="Add (Enter)">&#10003;</button>
+                <button type="button" class="mini" data-cancel="packages" title="Cancel (Esc)">&#10005;</button>
             </div>
         </div>
 
-        <!-- Filters -->
-        <div class="group">
-            <label for="search_input">Search live logs</label>
-            <div class="row">
-                <input type="text" id="search_input" placeholder="Text to find" autocomplete="off" />
-                <button id="search_btn" type="button">Search</button>
-                <button id="search_clear" type="button" class="icon" title="Clear the search">&#10005;</button>
-            </div>
-            <div class="row">
-                <select id="level_select" title="Lowest log level shown">
-                    <option value="">All levels</option>
-                    <option value="D">Debug and up</option>
-                    <option value="I">Info and up</option>
-                    <option value="W">Warning and up</option>
-                    <option value="E">Error and up</option>
-                    <option value="F">Fatal only</option>
-                </select>
-                <button id="save_btn" type="button" class="primary">Save</button>
-                <button id="clear_btn" type="button" title="Clear the screen (Save still has every line)">Clear screen</button>
-            </div>
+        <label class="switch" id="only_wrap" title="Show only the lines of the selected package">
+            <input type="checkbox" id="pkg_only" />
+            <span class="track"><span class="knob"></span></span>
+            <span>Only this package</span>
+        </label>
+
+        <div class="toolbar-break"></div>
+
+        <!-- Search (Enter or the magnifier applies it to the live logs) -->
+        <div class="field search">
+            <button id="search_btn" type="button" class="field-icon icon-btn" title="Search (Enter)">&#128269;</button>
+            <input type="text" id="search_input" placeholder="Search live logs... (Enter)" autocomplete="off" />
+            <button id="search_clear" type="button" class="mini hidden" title="Clear search">&#10005;</button>
         </div>
+
+        <div class="field level">
+            <span class="field-icon" title="Lowest level shown">&#9776;</span>
+            <select id="level_select">
+                <option value="">All levels</option>
+                <option value="D">Debug +</option>
+                <option value="I">Info +</option>
+                <option value="W">Warning +</option>
+                <option value="E">Error +</option>
+                <option value="F">Fatal</option>
+            </select>
+        </div>
+
+        <button id="save_btn" type="button" class="btn primary" title="Download the logs of this device">&#10515; Save</button>
+        <button id="clear_btn" type="button" class="btn ghost" title="Clear the screen (Save still has every line)">&#9003; Clear</button>
     </section>
 
-    <div class="infobar">
-        <span id="counts" class="muted">0 lines</span>
-        <span id="pids" class="muted"></span>
-        <button id="jump_btn" type="button" class="hidden">&#8595; Jump to latest</button>
-    </div>
-
-    <main id="log" class="log"></main>
+    <main class="log-wrap">
+        <div id="log" class="log"></div>
+        <div id="empty" class="empty">
+            <div class="empty-icon">&#128250;</div>
+            <div class="empty-title">Pick a device to start</div>
+            <div class="empty-text">Choose a TV in the device list, or "+ Add new device..." to type its IP.</div>
+        </div>
+        <div class="log-footer">
+            <span id="pids" class="pids"></span>
+            <span id="counts" class="counts">0 lines</span>
+            <button id="jump_btn" type="button" class="jump hidden">&#8595; Latest</button>
+        </div>
+    </main>
 
     <!-- Save: which lines -->
     <div id="save_dialog" class="dialog hidden">
         <div class="dialog-box">
-            <h3>Save logs</h3>
-            <p>Save only the lines the filters show now, or every line of this device since it was opened?</p>
-            <div class="row end">
-                <button id="save_filtered" type="button" class="primary">Filtered results</button>
-                <button id="save_all" type="button">All logs</button>
-                <button id="save_cancel" type="button">Cancel</button>
+            <div class="dialog-title">Save logs</div>
+            <p>Only the lines the filters show now, or every line of this device since it was opened?</p>
+            <div class="dialog-actions">
+                <button id="save_cancel" type="button" class="btn ghost">Cancel</button>
+                <button id="save_all" type="button" class="btn">All logs</button>
+                <button id="save_filtered" type="button" class="btn primary">Filtered results</button>
             </div>
         </div>
     </div>

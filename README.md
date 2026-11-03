@@ -16,15 +16,17 @@ Needs `adb` on the PATH (or `ADB_PATH`).
 
 ## Using it
 
-- **Device IP**: type an IP and press Add (or Enter); it is remembered in the dropdown (data/history.json).
-  Selecting it connects the TV and streams its logcat. The x button removes the IP from the list.
-- **Package**: type a package name and Add; select it to follow that app (its process IDs, also after
+- **Device**: pick a TV in the dropdown, or "+ Add new device..." to type its IP (Enter); remembered in
+  data/history.json. "Remove ... from the list" in the same dropdown removes it. Picking a TV connects it
+  and streams its logcat.
+- **Package**: "+ Add new package..." in its dropdown; select it to follow that app (its process IDs, also after
   the app restarts). **Only this package** shows only that app's lines; unticked, all lines show and
   the app's lines are tinted.
 - **Search**: shows only the lines containing the text (new lines too) and highlights it; x clears it.
 - **Level**: lowest level shown (Debug and up ... Fatal only).
 - **Save**: downloads a .txt of this device - the filtered results, or all lines since it was opened.
-- **Clear screen** empties the view only (Save still has every line).
+- **Clear** empties the view only (Save still has every line).
+- **Light / dark**: the round button at the top right (remembered in the browser).
 
 ## Staying connected
 
@@ -44,3 +46,4 @@ the latest 3,000 that pass the filters.
 | LOGCAT_PORT | 3737 | Port of the page |
 | LOGCAT_ADB_PORT | 5038 | Port of the private adb server |
 | ADB_PATH | adb | adb executable |
+| LOGCAT_DATA_DIR | data | Folder of history.json |

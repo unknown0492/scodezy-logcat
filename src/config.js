@@ -24,7 +24,7 @@ module.exports = {
     backlogLines: 5000,
 
     // Remembered IPs and packages
-    historyFile: path.join( __dirname, '..', 'data', 'history.json' ),
+    historyFile: path.join( process.env.LOGCAT_DATA_DIR || path.join( __dirname, '..', 'data' ), 'history.json' ),
     // History lists are kept this short
     maxHistory: 50
 };

@@ -1,5 +1,17 @@
 # Changelog
 
+## 1.0.1 - 03-11-2026
+- New look: one slim toolbar (device, package, Only this package switch / search, level, Save, Clear) and
+  the rest of the screen for logs; adding a device or package is "+ Add new..." inside its dropdown,
+  removing is "Remove ... from the list" there too.
+- Light / dark theme button (remembered in the browser; first visit follows the Windows theme).
+- Log lines in columns: time, PID (TID on hover), coloured level badge, tag, message; warnings and
+  errors tinted; selected package's lines marked with a blue edge; empty-state hint; status pill with
+  pulsing dot and the device IP; footer with PIDs, counts and "Latest".
+- Fix: a page opening a TV that is already streaming could show a line twice (backlog + the next
+  batch); the page now skips line numbers it already has.
+- LOGCAT_DATA_DIR: folder of history.json (tests use their own, the real list is never touched).
+
 ## 1.0.0 - 03-11-2026
 - First version: web page on http://127.0.0.1:3737 (pm2 process scodezy-logcat).
 - Device IPs and package names remembered (data/history.json), removable.
