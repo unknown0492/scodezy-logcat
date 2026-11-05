@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.2 - 05-11-2026
+
+- Tag column: double-click any tag to widen the column to the longest tag shown (it keeps widening when a
+  longer tag arrives); double-click again to go back to the 140 px column with "...". Remembered in this
+  browser (localStorage scodezy-logcat-tag-fit). The double-click no longer leaves the word selected.
+
 ## 1.0.1 - 03-11-2026
 - New look: one slim toolbar (device, package, Only this package switch / search, level, Save, Clear) and
   the rest of the screen for logs; adding a device or package is "+ Add new..." inside its dropdown,

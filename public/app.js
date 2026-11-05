@@ -67,6 +67,10 @@ const LC = {
         $( '#search_clear' ).on( 'click', function(){ $( '#search_input' ).val( '' ); LC.applySearch(); } );
 
         $( '#clear_btn' ).on( 'click', function(){ LC.lines = []; LC.renderAll(); } );
+
+        // 1.0.2: double-click a tag - the Tag column fits the longest tag; again - back to the narrow column
+        LC.restoreTagFit();
+        $( '#log' ).on( 'dblclick', '.c-tag', LC.toggleTagFit );
         $( '#jump_btn' ).on( 'click', function(){ LC.autoScroll = true; LC.scrollToEnd(); } );
         $( '#log' ).on( 'scroll', function(){
             var el = this;   // Log area
@@ -92,6 +96,67 @@ const LC = {
     },
 
     // ───────────── theme ─────────────
+
+    // ───────────── Tag column width (1.0.2) ─────────────
+
+    TAG_NARROW: 140,      // Tag column width in px when not fitted (shows "..." for long tags)
+    tagFit: false,        // The Tag column fits the longest tag shown
+    tagMax: 0,            // Width in px of the longest tag shown (while fitted)
+    tagCanvas: null,      // Canvas used to measure text
+    tagWidths: {},        // Measured width per tag text
+
+    /**
+     * @description Width a tag needs in the log font (measured once per tag text)
+     * @param {string} text
+     * @returns {number} px
+     */
+    tagTextWidth: function( text ){
+        if( LC.tagWidths[ text ] === undefined ){
+            if( !LC.tagCanvas ){
+                LC.tagCanvas = document.createElement( 'canvas' ).getContext( '2d' );
+                LC.tagCanvas.font = $( '#log' ).css( 'font-size' ) + ' ' + $( '#log' ).css( 'font-family' );   // The log font
+            }
+            LC.tagWidths[ text ] = Math.ceil( LC.tagCanvas.measureText( text ).width );
+        }
+        return LC.tagWidths[ text ];
+    },
+
+    /**
+     * @description Sets the Tag column width: the longest tag shown while fitted, else the narrow width
+     * @returns {void}
+     */
+    applyTagWidth: function(){
+        var width = LC.tagFit ? Math.max( LC.TAG_NARROW, LC.tagMax + 4 ) : LC.TAG_NARROW;   // px
+        $( '#log' )[ 0 ].style.setProperty( '--tag-w', width + 'px' );
+    },
+
+    /**
+     * @description Double-click on a tag: fitted <-> narrow; remembered in this browser
+     * @returns {void}
+     */
+    toggleTagFit: function(){
+        LC.tagFit = !LC.tagFit;
+        if( window.getSelection ){
+            window.getSelection().removeAllRanges();   // The double-click selected the word
+        }
+        try{ localStorage.setItem( 'scodezy-logcat-tag-fit', LC.tagFit ? '1' : '0' ); } catch( e ){}
+        LC.tagMax = 0;
+        if( LC.tagFit ){
+            $( '#log .c-tag' ).each( function(){
+                LC.tagMax = Math.max( LC.tagMax, LC.tagTextWidth( $( this ).attr( 'title' ) || $( this ).text() ) );
+            });
+        }
+        LC.applyTagWidth();
+    },
+
+    /**
+     * @description Restores the remembered Tag column mode
+     * @returns {void}
+     */
+    restoreTagFit: function(){
+        try{ LC.tagFit = localStorage.getItem( 'scodezy-logcat-tag-fit' ) === '1'; } catch( e ){ LC.tagFit = false; }
+        LC.applyTagWidth();
+    },
 
     /**
      * @description Switches light / dark and remembers it in this browser
@@ -426,6 +491,9 @@ const LC = {
             return '<div class="ln raw">' + LC.mark( line.t ) + '</div>';
         }
         var mine = LC.pkg && LC.pids.has( line.p ) && !$( '#pkg_only' ).is( ':checked' );   // Tint the package's lines
+        if( LC.tagFit ){
+            LC.tagMax = Math.max( LC.tagMax, LC.tagTextWidth( m[ 5 ] ) );   // 1.0.2: widest tag shown
+        }
         return '<div class="ln lv-' + m[ 4 ] + ( mine ? ' mine' : '' ) + '">' +
                    '<span class="c-time">' + LC.mark( m[ 1 ] ) + '</span>' +
                    '<span class="c-pid" title="TID ' + m[ 3 ] + '">' + LC.mark( m[ 2 ] ) + '</span>' +
@@ -447,7 +515,9 @@ const LC = {
             }
         }
         matched.reverse();
+        LC.tagMax = 0;   // 1.0.2: measured again from the lines shown
         $( '#log' ).html( $.map( matched, LC.lineHtml ).join( '' ) );
+        LC.applyTagWidth();
         LC.shown = matched.length;
         $( '#empty' ).toggleClass( 'hidden', LC.device !== '' );
         LC.showCounts();
@@ -477,6 +547,7 @@ const LC = {
         if( added > 0 ){
             var log = $( '#log' );   // Log area
             log.append( html );
+            LC.applyTagWidth();   // 1.0.2: a longer new tag widens the fitted column
             LC.shown += added;
             if( LC.shown > LC.MAX_DOM_LINES ){
                 log.children().slice( 0, LC.shown - LC.MAX_DOM_LINES ).remove();

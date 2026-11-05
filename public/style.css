@@ -210,7 +210,7 @@ body {
 
 .ln {
     display: grid;
-    grid-template-columns: 150px 52px 22px 140px 1fr;
+    grid-template-columns: 150px 52px 22px var(--tag-w, 140px) 1fr;   /* 1.0.2: Tag width set by double-click */
     gap: 10px;
     padding: 0 18px;
     align-items: start;
@@ -233,7 +233,7 @@ body {
     color: #fff;
     background: var(--lv-V);
 }
-.ln .c-tag { color: var(--accent); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ln .c-tag { color: var(--accent); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; cursor: col-resize; }
 .ln .c-msg { white-space: pre-wrap; word-break: break-word; }
 .ln.raw { display: block; color: var(--muted); font-style: italic; }
 
