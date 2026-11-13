@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.0.5 - 13-11-2026
+
+- install.ps1 / README: the pm2 hints say `pm2.cmd ...` - in Windows PowerShell plain `pm2` runs pm2.ps1, which
+  the default execution policy blocks ("running scripts is disabled on this system").
+
 ## 1.0.4 - 13-11-2026
 
 - install.ps1: an existing scodezy-logcat pm2 process is now found with "pm2 id" (Windows PowerShell 5.1

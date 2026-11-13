@@ -1,5 +1,5 @@
 <#
-    install.ps1 - installs or updates scodezy-logcat on any Windows PC (v1.0.4)
+    install.ps1 - installs or updates scodezy-logcat on any Windows PC (v1.0.5)
 
     One line, in PowerShell (no admin needed unless Node.js has to be installed):
 
@@ -171,7 +171,10 @@
         Write-Host "`nscodezy-logcat $version is running: $url" -ForegroundColor Green
         Start-Process $url
     } else {
-        Write-Host "`nInstalled, but the page does not answer yet. Check: pm2 logs scodezy-logcat" -ForegroundColor Yellow
+        Write-Host "`nInstalled, but the page does not answer yet. Check: pm2.cmd logs scodezy-logcat" -ForegroundColor Yellow
     }
-    Write-Host 'Update later: run the same line again. Stop: pm2 stop scodezy-logcat'
+    Write-Host 'Update later: run the same line again.'
+    # pm2.cmd: in Windows PowerShell plain "pm2" runs pm2.ps1, which the default execution policy blocks
+    Write-Host 'pm2 in PowerShell: pm2.cmd list | pm2.cmd stop scodezy-logcat | pm2.cmd restart scodezy-logcat | pm2.cmd logs scodezy-logcat'
+    Write-Host '(in Command Prompt plain "pm2 ..." works too)'
 }

@@ -26,6 +26,8 @@ pm2 save
 ```
 
 Restart: `pm2 restart scodezy-logcat` - logs: `pm2 logs scodezy-logcat`.
+In Windows PowerShell type `pm2.cmd ...` (e.g. `pm2.cmd list`): plain `pm2` runs `pm2.ps1`, which the default
+execution policy ("running scripts is disabled on this system") blocks. In Command Prompt plain `pm2` works.
 Needs `adb` on the PATH (or `ADB_PATH`).
 
 ## Using it
