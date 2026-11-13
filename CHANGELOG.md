@@ -1,5 +1,15 @@
 # Changelog
 
+## 1.0.3 - 13-11-2026
+
+- install.ps1: one-line installer / updater for any Windows PC
+  (`irm https://raw.githubusercontent.com/unknown0492/scodezy-logcat/main/install.ps1 | iex`): Node.js LTS when
+  missing (winget or the nodejs.org MSI), Google platform-tools when adb is missing, download from GitHub into
+  %LOCALAPPDATA%\scodezy-logcat (data\ kept on update), npm install, pm2 start + save (only the scodezy-logcat
+  process is touched), start at sign-in via the Startup folder, opens the page. LOGCAT_INSTALL_DIR,
+  LOGCAT_BRANCH, LOGCAT_SKIP_START.
+- ecosystem.config.js: uses platform-toolsdb.exe of the app folder when it is there.
+
 ## 1.0.2 - 05-11-2026
 
 - Tag column: double-click any tag to widen the column to the longest tag shown (it keeps widening when a

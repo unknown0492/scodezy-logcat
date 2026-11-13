@@ -2,6 +2,20 @@
 
 Live `adb logcat` of Android TVs in the browser: **http://127.0.0.1:3737** (this PC only).
 
+## Install on any PC (one line)
+
+In PowerShell (Windows 10 / 11):
+
+```
+irm https://raw.githubusercontent.com/unknown0492/scodezy-logcat/main/install.ps1 | iex
+```
+
+It installs Node.js LTS when missing (winget, else the official MSI: Windows asks for permission), downloads
+Google's platform-tools when adb is not on the PATH, puts scodezy-logcat in `%LOCALAPPDATA%\scodezy-logcat`,
+starts it with pm2, makes it start again at Windows sign-in (Startup folder) and opens http://127.0.0.1:3737.
+Run the same line again to update (remembered TVs and packages in `data\` are kept). Options, set before the line:
+`$env:LOGCAT_INSTALL_DIR` (folder), `$env:LOGCAT_BRANCH` (default main), `$env:LOGCAT_SKIP_START = '1'` (install only).
+
 ## Run (pm2)
 
 ```
