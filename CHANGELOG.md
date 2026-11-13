@@ -8,7 +8,7 @@
   %LOCALAPPDATA%\scodezy-logcat (data\ kept on update), npm install, pm2 start + save (only the scodezy-logcat
   process is touched), start at sign-in via the Startup folder, opens the page. LOGCAT_INSTALL_DIR,
   LOGCAT_BRANCH, LOGCAT_SKIP_START.
-- ecosystem.config.js: uses platform-toolsdb.exe of the app folder when it is there.
+- ecosystem.config.js: uses platform-tools\adb.exe of the app folder when it is there.
 
 ## 1.0.2 - 05-11-2026
 
