@@ -1,5 +1,5 @@
 <#
-    install.ps1 - installs or updates scodezy-logcat on any Windows PC (v1.0.3)
+    install.ps1 - installs or updates scodezy-logcat on any Windows PC (v1.0.4)
 
     One line, in PowerShell (no admin needed unless Node.js has to be installed):
 
@@ -141,8 +141,8 @@
     }
     if ( -not ( Test-Path $pm2 ) ) { throw 'pm2 could not be installed.' }
     # Only the scodezy-logcat process is touched (other pm2 apps on this PC are left alone)
-    $running = $false
-    try { $running = [bool] ( ( & $pm2 jlist 2>$null | Out-String | ConvertFrom-Json ) | Where-Object { $_.name -eq 'scodezy-logcat' } ) } catch { }
+    # "pm2 id <name>" prints [ 2 ] or [] ("pm2 jlist" cannot be read by Windows PowerShell 5.1: duplicate keys)
+    $running = ( ( & $pm2 id scodezy-logcat 2>$null ) -join ' ' ) -match '\d'
     Push-Location $dir
     try {
         if ( $running ) { & $pm2 delete scodezy-logcat | Out-Null }       # Re-read ecosystem.config.js (new folder / adb path)

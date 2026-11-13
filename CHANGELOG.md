@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.0.4 - 13-11-2026
+
+- install.ps1: an existing scodezy-logcat pm2 process is now found with "pm2 id" (Windows PowerShell 5.1
+  cannot read "pm2 jlist": duplicate USERNAME / username keys), so an update or a move from another folder
+  replaces the old process instead of leaving it running from the old folder.
+- package-lock.json back to its 1.0.2 content: the 1.0.3 version bump had wrongly changed the version of two
+  dependencies in it (call-bind-apply-helpers, side-channel-weakmap).
+
 ## 1.0.3 - 13-11-2026
 
 - install.ps1: one-line installer / updater for any Windows PC
